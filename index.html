@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ===== BASIC META ===== -->
+  <meta charset="UTF-8" />
+  <!-- viewport-fit=cover + viewport-fit makes the site use the full screen on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rithika Krishnamoorthy | Cybersecurity Portfolio</title>
+  <meta name="description" content="Portfolio of Rithika Krishnamoorthy — B.Tech CSE (Cyber Security) student at SRMIST, cybersecurity intern, SOC analysis and network security enthusiast." />
+  <meta name="author" content="Rithika Krishnamoorthy" />
+
+  <!-- ===== SOCIAL PREVIEW (used when you share the link) ===== -->
+  <meta property="og:title" content="Rithika Krishnamoorthy | Cybersecurity Portfolio" />
+  <meta property="og:description" content="B.Tech CSE (Cyber Security) student, cybersecurity intern, and builder of ThreatTrace and NetGuardian AI." />
+  <meta property="og:type" content="website" />
+
+  <!-- ===== FAVENDER (a cherry-blossom emoji turned into an icon) ===== -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>" />
+
+  <!-- ===== GOOGLE FONTS (Quicksand for body, Pacifico for headings) ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- ===== OUR STYLESHEET ===== -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!--
+    HOW THIS SITE WORKS
+    -------------------
+    .deck  = the horizontal scroll-snap container (the "deck" of pages)
+    .page  = one full-screen page. There are 4 of them.
+    Everything decorative (clouds, stars) is hidden from screen readers with aria-hidden.
+  -->
+
+  <main class="deck" id="deck" tabindex="0" aria-label="Portfolio pages. Use left and right arrow keys to move between pages.">
+
+    <!-- ============================================================= -->
+    <!-- PAGE 1 — HOME (your banner photo fills the whole screen)       -->
+    <!-- ============================================================= -->
+    <section class="page page--home" id="page-1" aria-label="Home">
+
+      <!-- Hidden heading for search engines + screen readers.
+           The real title text is baked into the photo, so we don't show this. -->
+      <h1 class="sr-only">Hi, I'm Rithika — Cybersecurity student</h1>
+
+      <!-- Your banner image. Replace assets/hero.jpg with your own picture. -->
+      <img
+        class="hero-img"
+        src="assets/hero.png"
+        alt="Banner photo of Rithika Krishnamoorthy, a cybersecurity student."
+      />
+
+      <!-- Soft fade on the right edge so the dark photo melts into the pastel pages -->
+      <div class="hero-fade" aria-hidden="true"></div>
+
+      <!-- Little bouncing hint that disappears after the first swipe -->
+      <p class="swipe-hint" id="swipeHint">swipe&nbsp;→</p>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- PAGE 2 — ABOUT ME                                              -->
+    <!-- ============================================================= -->
+    <section class="page page--pastel" id="page-2" aria-label="About me">
+      <!-- Decorative background layers (ignored by screen readers) -->
+      <div class="deco" aria-hidden="true">
+        <span class="blob blob--1"></span>
+        <span class="blob blob--2"></span>
+        <span class="blob blob--3"></span>
+        <span class="stars stars--1"></span>
+        <span class="sparkles sparkles--1"></span>
+      </div>
+
+      <div class="content">
+        <h2 class="title">About me 🌙</h2>
+        <div class="glass">
+          <p>
+            I'm Rithika, a B.Tech CSE (Cyber Security) student at SRMIST, graduating in 2028.
+            Right now I'm a cybersecurity intern at Orvionar Private Ltd, Bangalore, where I get
+            to learn by doing every single day. I love digging into <strong>SOC analysis</strong>,
+            <strong>network security</strong> and <strong>AI-powered security tools</strong> —
+            and when I'm not investigating, you'll find me building small projects just for fun. ✨
+          </p>
+        </div>
+
+        <!-- Cute little skill chips -->
+        <ul class="chips" aria-label="My interests">
+          <li class="chip">🛡️ SOC Analysis</li>
+          <li class="chip">🌐 Network Security</li>
+          <li class="chip">🤖 AI Security Tools</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- PAGE 3 — PROJECTS                                              -->
+    <!-- ============================================================= -->
+    <section class="page page--pastel" id="page-3" aria-label="Projects">
+      <div class="deco" aria-hidden="true">
+        <span class="blob blob--1"></span>
+        <span class="blob blob--2"></span>
+        <span class="blob blob--3"></span>
+        <span class="stars stars--1"></span>
+        <span class="sparkles sparkles--1"></span>
+      </div>
+
+      <div class="content">
+        <h2 class="title">My projects ✨</h2>
+
+        <div class="cards">
+          <!-- CARD 1 — ThreatTrace -->
+          <article class="card">
+            <div class="card-head">
+              <span class="card-emoji" aria-hidden="true">🦠</span>
+              <h3 class="card-title">ThreatTrace</h3>
+            </div>
+            <p class="card-text">
+              AI-powered threat analysis that traces malware back to its source.
+            </p>
+            <a class="btn" href="https://github.com/rithikakrishnamoorthy1818-png/Threat-trace" target="_blank" rel="noopener noreferrer">
+              View on GitHub ↗
+            </a>
+          </article>
+
+          <!-- CARD 2 — NetGuardian AI (not public on GitHub yet, so it links to the profile) -->
+          <article class="card">
+            <div class="card-head">
+              <span class="card-emoji" aria-hidden="true">🛡️</span>
+              <h3 class="card-title">NetGuardian AI</h3>
+            </div>
+            <p class="card-text">
+              A 14-module network security assessment and asset management platform.
+            </p>
+            <a class="btn" href="https://github.com/rithikakrishnamoorthy1818-png" target="_blank" rel="noopener noreferrer">
+              View on GitHub ↗
+            </a>
+          </article>
+
+          <!-- CARD 3 — Resume Analyzer -->
+          <article class="card">
+            <div class="card-head">
+              <span class="card-emoji" aria-hidden="true">📄</span>
+              <h3 class="card-title">Resume Analyzer</h3>
+            </div>
+            <p class="card-text">
+              AI resume analysis that suggests domains, finds missing skills and makes a PDF report.
+            </p>
+            <a class="btn" href="https://github.com/rithikakrishnamoorthy1818-png/resume-analyzer" target="_blank" rel="noopener noreferrer">
+              View on GitHub ↗
+            </a>
+          </article>
+
+          <!-- CARD 4 — CryptoFlow Analyzer -->
+          <article class="card">
+            <div class="card-head">
+              <span class="card-emoji" aria-hidden="true">💱</span>
+              <h3 class="card-title">CryptoFlow Analyzer</h3>
+            </div>
+            <p class="card-text">
+              Analyze cryptocurrency transactions and detect suspicious flows in real time.
+            </p>
+            <a class="btn" href="https://github.com/rithikakrishnamoorthy1818-png/CryptoFlow-Analyzer" target="_blank" rel="noopener noreferrer">
+              View on GitHub ↗
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- PAGE 4 — CONTACT                                               -->
+    <!-- ============================================================= -->
+    <section class="page page--pastel" id="page-4" aria-label="Contact">
+      <div class="deco" aria-hidden="true">
+        <span class="blob blob--1"></span>
+        <span class="blob blob--2"></span>
+        <span class="blob blob--3"></span>
+        <span class="stars stars--1"></span>
+        <span class="sparkles sparkles--1"></span>
+      </div>
+
+      <div class="content content--center">
+        <h2 class="title">Let's connect 💌</h2>
+        <p class="subtitle">Come say hi — I'd love to hear from you!</p>
+
+        <!-- Three round icon buttons. The text inside is for screen readers. -->
+        <div class="socials">
+          <a class="social" href="https://github.com/rithikakrishnamoorthy1818-png" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.35-1.29-1.7-1.29-1.7-1.06-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.24 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+          </a>
+
+          <a class="social" href="https://www.linkedin.com/in/rithika-krishnamoorthy-338baa331" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13Zm1.78 13.02H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+          </a>
+
+          <a class="social" href="mailto:rithikakrishnamoorthy1818@gmail.com" aria-label="Email Rithika">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg>
+          </a>
+        </div>
+
+        <footer class="footer">Made with 💜 by Rithika</footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== NAVIGATION: arrows (desktop) + dots (everyone) ===== -->
+  <button class="arrow arrow--left" id="prevBtn" aria-label="Previous page">‹</button>
+  <button class="arrow arrow--right" id="nextBtn" aria-label="Next page">›</button>
+
+  <nav class="dots" id="dots" aria-label="Page navigation">
+    <!-- One button per page. script.js fills in the active state. -->
+    <button class="dot" data-index="0" aria-label="Go to page 1: Home"></button>
+    <button class="dot" data-index="1" aria-label="Go to page 2: About me"></button>
+    <button class="dot" data-index="2" aria-label="Go to page 3: Projects"></button>
+    <button class="dot" data-index="3" aria-label="Go to page 4: Contact"></button>
+  </nav>
+
+  <!-- ===== OUR JAVASCRIPT ===== -->
+  <script src="script.js"></script>
+</body>
+</html>

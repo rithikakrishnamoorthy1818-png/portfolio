@@ -1,0 +1,588 @@
+/* ============================================================
+   STYLE.CSS — dreamy swipe portfolio
+   ------------------------------------------------------------
+   ORDER OF THIS FILE
+   1. Colour variables (change colours here only!)
+   2. Base / reset
+   3. The deck (horizontal scroll-snap container)
+   4. Page 1 — home hero
+   5. Decorations (blobs, stars, sparkles)
+   6. Shared content styles (titles, glass cards, chips)
+   7. Page 3 — project cards
+   8. Page 4 — contact + footer
+   9. Navigation (dots + arrows)
+   10. Animations
+   11. Reduced-motion accessibility
+   ============================================================ */
+
+
+/* ============================================================
+   1. COLOUR VARIABLES  —  tweak the whole site from right here
+   ============================================================ */
+:root {
+  --lilac:        #E4D4FF;   /* pale purple */
+  --purple:       #C9B1FF;   /* soft purple */
+  --orchid:       #F5C6EC;   /* orchid pink */
+  --periwinkle:   #DDE3FF;   /* bluish lavender */
+  --cream:        #FFF9FD;   /* warm white */
+  --plum:         #3F2D5A;   /* deep plum, used for text */
+  --rose:         #FF9ACB;   /* bright rose accent */
+
+  /* Gradients */
+  --bg-gradient:  linear-gradient(135deg, var(--lilac) 0%, var(--periwinkle) 45%, var(--orchid) 100%);
+  --rose-gradient: linear-gradient(135deg, var(--purple), var(--rose));
+
+  /* Soft purple glow shadow used on cards & buttons */
+  --glow: 0 12px 40px rgba(122, 87, 194, 0.22);
+  --glow-strong: 0 16px 50px rgba(255, 154, 203, 0.35);
+
+  /* Sizing */
+  --radius: 26px;      /* how rounded corners are */
+  --nav-space: 90px;   /* room kept at page bottom for dots/arrows */
+
+  /* Motion speed — smaller = snappier */
+  --speed: 0.6s;
+}
+
+
+/* ============================================================
+   2. BASE / RESET
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;                 /* the site never scrolls the body */
+  font-family: "Quicksand", system-ui, sans-serif;
+  color: var(--plum);
+  background: var(--bg-gradient);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings use the flowy Pacifico font */
+h1, h2, h3 { font-family: "Pacifico", cursive; font-weight: 400; }
+
+/* Tiny helper class: visible to screen readers, invisible on screen.
+   Used for the h1 on the home page (the text is already in the photo). */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================
+   3. THE DECK  —  the horizontal swipe container
+   ------------------------------------------------------------
+   scroll-snap-type: x mandatory  means "always rest exactly on
+   a page". Combined with overflow-x: auto this gives us the
+   story-style left/right swipe for free (touch, trackpad, mouse).
+   ============================================================ */
+.deck {
+  display: flex;
+  height: 100dvh;                   /* dvh = real mobile viewport height */
+  width: 100vw;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;    /* ← the magic line */
+  scroll-behavior: smooth;
+  scroll-padding-left: 0;
+  scrollbar-width: none;            /* hide the scrollbar (Firefox) */
+}
+.deck::-webkit-scrollbar { display: none; }   /* hide it (Chrome/Safari) */
+
+/* Each page = exactly one screen */
+.page {
+  position: relative;
+  flex: 0 0 100vw;                  /* never shrink, always full width */
+  width: 100vw;
+  height: 100dvh;
+  scroll-snap-align: start;         /* snap to the page's left edge */
+  scroll-snap-stop: always;         /* one swipe = exactly one page */
+  overflow: hidden;                 /* pages 2–4 never scroll inside */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Pages 2–4 share the dreamy pastel gradient */
+.page--pastel { background: var(--bg-gradient); }
+
+
+/* ============================================================
+   4. PAGE 1 — HOME (the banner photo)
+   ============================================================ */
+
+.page--home {
+  background: #000;
+}
+
+/* Show the whole image, centered, no cropping. No filters, no opacity, no glare */
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  image-rendering: auto;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+
+/* Remove any fade/glare overlays */
+.hero-fade {
+  display: none !important;
+  background: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* The little bouncing "swipe →" hint */
+.swipe-hint {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  box-shadow: none;
+  animation: bounce-hint 1.8s ease-in-out infinite;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  filter: none;
+}
+/* Once the user swipes, JS adds this class and the hint fades away */
+.swipe-hint.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   5. DECORATIONS  —  blurred blobs, twinkling stars, sparkles
+   (all aria-hidden in the HTML, purely visual)
+   ============================================================ */
+.deco {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;             /* never block clicks */
+}
+
+/* --- soft blurred "cloud" blobs --- */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);               /* the blur makes them look like clouds */
+  opacity: 0.65;
+}
+.blob--1 {
+  width: 420px; height: 420px;
+  top: -120px; left: -100px;
+  background: var(--purple);
+  animation: drift 16s ease-in-out infinite alternate;
+}
+.blob--2 {
+  width: 360px; height: 360px;
+  bottom: -110px; right: -80px;
+  background: var(--orchid);
+  animation: drift 20s ease-in-out infinite alternate-reverse;
+}
+.blob--3 {
+  width: 260px; height: 260px;
+  top: 55%; left: 60%;
+  background: var(--periwinkle);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+/* --- twinkling stars (tiny dots drawn with radial-gradients) --- */
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 25%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 70% 15%, #fff, transparent),
+    radial-gradient(2px 2px at 85% 60%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 35% 75%, #fff, transparent),
+    radial-gradient(2px 2px at 55% 45%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 12% 65%, #fff, transparent);
+  background-repeat: no-repeat;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+/* --- floating sparkles (small diamonds that drift upward) --- */
+.sparkles {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(3px 3px at 15% 80%, var(--rose), transparent),
+    radial-gradient(2px 2px at 80% 70%, var(--rose), transparent),
+    radial-gradient(2.5px 2.5px at 45% 90%, var(--rose), transparent),
+    radial-gradient(2px 2px at 65% 85%, var(--rose), transparent);
+  animation: float-up 9s linear infinite;
+}
+
+
+/* ============================================================
+   6. SHARED CONTENT STYLES  (pages 2, 3, 4)
+   ============================================================ */
+
+/* .content = the inner wrapper. The padding-bottom makes sure
+   the navigation dots never overlap the content. */
+.content {
+  position: relative;
+  z-index: 2;
+  width: min(900px, 88vw);
+  padding: 24px 0 var(--nav-space);
+}
+
+/* Content starts hidden and floats in when the page becomes
+   active (JS toggles .is-active on the current page). */
+.content > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.page.is-active .content > *   { opacity: 1; transform: translateY(0); }
+/* Stagger: each child waits a little longer than the one before */
+.page.is-active .content > *:nth-child(2) { transition-delay: 0.12s; }
+.page.is-active .content > *:nth-child(3) { transition-delay: 0.24s; }
+.page.is-active .content > *:nth-child(4) { transition-delay: 0.36s; }
+
+/* Page titles */
+.title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  margin-bottom: 0.6em;
+  background: var(--rose-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--rose);              /* fallback if gradient text unsupported */
+}
+
+/* Sub-heading used on the contact page */
+.subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 500;
+  opacity: 0.85;
+  margin-bottom: 1.8em;
+}
+
+/* --- frosted glass panel --- */
+.glass {
+  background: rgba(255, 249, 253, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius);
+  padding: clamp(18px, 4vw, 34px);
+  box-shadow: var(--glow);
+  line-height: 1.75;
+  font-size: clamp(0.98rem, 2.2vw, 1.15rem);
+}
+
+/* --- cute chips (About page) --- */
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.chip {
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(255, 249, 253, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 6px 18px rgba(122, 87, 194, 0.15);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.chip:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glow-strong);
+}
+
+
+/* ============================================================
+   7. PAGE 3 — PROJECT CARDS
+   ============================================================ */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;        /* phone: cards stacked in one column */
+  gap: 10px;
+}
+/* Tablet: 2 cards side by side, 2 rows */
+@media (min-width: 700px) {
+  .cards { grid-template-columns: 1fr 1fr; gap: 16px; }
+}
+/* Desktop / landscape tablets: all 4 cards in a single airy row */
+@media (min-width: 1000px) {
+  .cards { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  /* Wider container so 4 cards don't feel cramped */
+  #page-3 .content { width: min(1120px, 92vw); }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(18px, 3vw, 30px);
+  border-radius: var(--radius);
+  background: rgba(255, 249, 253, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--glow);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+/* Soft glow when you hover a card (desktop) */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--glow-strong);
+}
+
+/* Head row = emoji + project name sitting on the same line */
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-emoji { font-size: 2rem; }                              /* the big emoji icon */
+.card-title { font-size: clamp(1.15rem, 3vw, 1.5rem); }
+.card-text  { line-height: 1.55; font-weight: 500; opacity: 0.9; flex: 1;
+              font-size: clamp(0.88rem, 2vw, 1rem); }
+
+/* --- Phones: compact cards so all 4 still fit one screen --- */
+@media (max-width: 699px) {
+  .title    { font-size: 1.7rem; margin-bottom: 0.4em; }
+  .content  { padding-top: 14px; }
+  .cards    { gap: 10px; }
+  .card     { padding: 12px 16px; gap: 6px; border-radius: 20px; }
+  .card-emoji { font-size: 1.4rem; }
+  .card-title { font-size: 1.05rem; }
+  .card-text  { font-size: 0.8rem; line-height: 1.35; }
+  .btn      { padding: 6px 16px; font-size: 0.78rem; }
+}
+
+/* --- Very short phone screens: tighten so p2–p4 still fit one screen without inner scroll --- */
+@media (max-width: 699px) and (max-height: 760px) {
+  :root { --nav-space: 58px; }
+  .title    { font-size: 1.2rem; margin-bottom: 0.2em; }
+  .content  { padding-top: 6px; }
+  .glass    { padding: 10px 14px; font-size: 0.84rem; line-height: 1.4; }
+  .chips    { margin-top: 8px; gap: 6px; }
+  .chip     { padding: 5px 10px; font-size: 0.74rem; }
+  .cards    { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .card     { padding: 7px 10px; gap: 3px; border-radius: 14px; }
+  .card-emoji { font-size: 1rem; }
+  .card-title { font-size: 0.9rem; }
+  .card-text  { font-size: 0.7rem; line-height: 1.2; }
+  .btn      { padding: 4px 10px; font-size: 0.7rem; margin-top: 0; }
+}
+/* Extra tight for very short portrait phones */
+@media (max-width: 699px) and (max-height: 640px) {
+  :root { --nav-space: 52px; }
+  .title    { font-size: 1.15rem; }
+  .glass    { font-size: 0.8rem; line-height: 1.38; padding: 9px 12px; }
+  .chips    { margin-top: 6px; }
+  .cards    { gap: 5px; }
+  .card     { padding: 6px 9px; }
+  .card-text  { font-size: 0.68rem; line-height: 1.18; }
+}
+
+/* The "View on GitHub" pill button */
+.btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: var(--rose-gradient);
+  color: var(--cream);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 8px 22px rgba(255, 154, 203, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: var(--glow-strong); }
+.btn:focus-visible,
+.social:focus-visible,
+.dot:focus-visible,
+.arrow:focus-visible {
+  outline: 3px solid var(--plum);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================
+   8. PAGE 4 — CONTACT + FOOTER
+   ============================================================ */
+.content--center { text-align: center; }
+
+/* The row of round social buttons */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: clamp(16px, 4vw, 28px);
+  margin-bottom: 2em;
+}
+.social {
+  display: grid;
+  place-items: center;
+  width: clamp(60px, 14vw, 74px);
+  height: clamp(60px, 14vw, 74px);
+  border-radius: 50%;
+  background: rgba(255, 249, 253, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--glow);
+  color: var(--plum);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+.social svg { width: 45%; height: 45%; }
+.social:hover {
+  transform: translateY(-6px) scale(1.06);
+  box-shadow: var(--glow-strong);
+  color: var(--rose);
+}
+
+/* Small "Made with 💜" footer */
+.footer {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+
+/* ============================================================
+   9. NAVIGATION  —  dots + arrow buttons
+   (z-index keeps them on top of everything)
+   ============================================================ */
+
+/* --- dots --- */
+.dots {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--purple);
+  opacity: 0.7;
+  transition: all 0.35s ease;
+}
+/* The active dot is bigger and pink */
+.dot.is-active {
+  width: 26px;                     /* wider pill = clearly "you are here" */
+  border-radius: 999px;
+  background: var(--rose);
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(255, 154, 203, 0.8);
+}
+
+/* --- arrow buttons (desktop only — phones swipe instead) --- */
+.arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  box-shadow: none;
+}
+.arrow:hover { transform: translateY(-50%) scale(1.05); }
+.arrow--left  { left: 22px; }
+.arrow--right { right: 22px; }
+/* Hide the left arrow on the first page and the right arrow on the last */
+.arrow.is-hidden { opacity: 0; pointer-events: none; }
+
+@media (max-width: 699px) {
+  .arrow { display: none; }        /* phones don't need arrows */
+}
+
+
+/* ============================================================
+   10. ANIMATIONS
+   ============================================================ */
+@keyframes bounce-hint {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-10px); }
+}
+
+@keyframes drift {                  /* blobs slowly wander around */
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, 30px) scale(1.12); }
+}
+
+@keyframes twinkle {                /* stars pulse in and out */
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+@keyframes float-up {               /* sparkles rise like glitter */
+  0%   { transform: translateY(0);    opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(-120px); opacity: 0; }
+}
+
+
+/* ============================================================
+   11. REDUCED MOTION  —  accessibility
+   If the visitor has "reduce motion" turned on in their OS,
+   every animation stops and transitions become instant.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .deck { scroll-behavior: auto; }
+  .content > * { opacity: 1; transform: none; }
+  .swipe-hint { opacity: 1; }        /* keep the hint, just don't bounce it */
+}
